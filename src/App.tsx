@@ -1,19 +1,25 @@
 import Player from "./components/Player.tsx";
 import GameBoard from "./components/Gameboard.tsx";
 import {useState} from "react";
+import Log from "./components/Log.tsx";
+
+function deriveActivePlayer(gameTurns) {
+    let currentPlayer = 'X'
+    if (gameTurns.length > 0 && gameTurns[0].player === 'X') {
+        currentPlayer = 'O'
+    }
+    return currentPlayer
+}
 
 export default function App() {
 
     const [gameTurns, setGameTurns] = useState([])
-    const [activePlayer, setActivePlayer] = useState('X')
+    const activePlayer = deriveActivePlayer(gameTurns)
 
     function handleSelectSquare(row, col) {
-        setActivePlayer((currentActivePlayer) => currentActivePlayer === 'X' ? 'O' : 'X')
         setGameTurns((prevTurns) => {
-            let currentPlayer = 'X'
-            if (prevTurns.length > 0 && prevTurns[0].player === 'X') {
-                currentPlayer = 'O'
-            }
+            const currentPlayer = deriveActivePlayer(prevTurns)
+
             const updatedTurns = [{square: {row, col}, player: currentPlayer}, ...prevTurns]
             return updatedTurns;
         })
@@ -26,6 +32,7 @@ export default function App() {
                 <Player name="Player 2" symbol="O" activeSymbol={activePlayer}/>
             </ol>
             <GameBoard onSelectSquare={handleSelectSquare} turns={gameTurns}/>
+            <Log turns={gameTurns}/>
         </div>
     </main>
 }
