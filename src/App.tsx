@@ -5,7 +5,10 @@ import Log from "./components/Log.tsx";
 import {WINNING_COMBINATIONS} from "./winnig-combinagions.const.tsx";
 import GameOver from "./components/GameOver.tsx";
 
-const initialGameBoard = [[null, null, null], [null, null, null], [null, null, null]]
+const INITIAL_GAMEBOARD = [[null, null, null], [null, null, null], [null, null, null]]
+const PLAYERS = {
+    X: 'Player 1', O: 'Player 2'
+}
 
 function deriveActivePlayer(gameTurns) {
     let currentPlayer = 'X'
@@ -29,7 +32,7 @@ function deriveWinner(gameBoard, players) {
 }
 
 function deriveGameBoard(gameTurns) {
-    const gameBoard = [...initialGameBoard.map(array => [...array])]
+    const gameBoard = [...INITIAL_GAMEBOARD.map(array => [...array])]
 
     for (const turn of gameTurns) {
         const {square, player} = turn
@@ -41,9 +44,7 @@ function deriveGameBoard(gameTurns) {
 
 export default function App() {
     const [gameTurns, setGameTurns] = useState([])
-    const [players, setPlayers] = useState({
-        X: 'Player 1', O: 'Player 2'
-    })
+    const [players, setPlayers] = useState(PLAYERS)
     const gameBoard = deriveGameBoard(gameTurns);
     const activePlayer = deriveActivePlayer(gameTurns)
     const winner = deriveWinner(gameBoard, players)
@@ -69,8 +70,8 @@ export default function App() {
     return <main>
         <div id="game-container">
             <ol id="players" className="highlight-player">
-                <Player name="Player 1" symbol="X" activeSymbol={activePlayer} onChangeName={handlePlayerEdit}/>
-                <Player name="Player 2" symbol="O" activeSymbol={activePlayer} onChangeName={handlePlayerEdit}/>
+                <Player name={PLAYERS.X} symbol="X" activeSymbol={activePlayer} onChangeName={handlePlayerEdit}/>
+                <Player name={PLAYERS.O} symbol="O" activeSymbol={activePlayer} onChangeName={handlePlayerEdit}/>
             </ol>
             {(winner || hadDraw) && <GameOver winner={winner} onRematch={handleRematch}/>}
             <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard}/>
